@@ -1,5 +1,8 @@
 <?php
 
+//get query and sanitise
+$que = strip_tags($_POST['query']);
+
 $superheroes = [
   [
       "id" => 1,
@@ -63,10 +66,31 @@ $superheroes = [
   ], 
 ];
 
+if ($que === ""):
+//if query is empty, show list of all characters
 ?>
+    <ul>
+    <?php foreach ($superheroes as $superhero): ?>
+      <li><?= $superhero['alias']; ?></li>
+    <?php endforeach; ?>
+    </ul>
+<?php
+else:
+    $r = 0;
+    foreach ($superheroes as $superhero): //searches through array for queried name or alias
+        if ($superhero['alias'] === $que or $superhero['name'] === $que):
+            // if found display character data and end loop
+            ?><h3><?= $superhero['alias']; ?></h3>
+            <h4> A.K.A <?= $superhero['name']; ?></h4>
+            <p><?= $superhero['biography']; ?></p>
+            <?php $r=1;
+            break;
+        endif;
+    endforeach;
+    if ($r===0):
+        //if character not found
+        ?> <p style="color:#D80000; font-weight:bold;"> SUPERHERO NOT FOUND </p> <?php
+    endif;
+endif;
 
-<ul>
-<?php foreach ($superheroes as $superhero): ?>
-  <li><?= $superhero['alias']; ?></li>
-<?php endforeach; ?>
-</ul>
+?>
